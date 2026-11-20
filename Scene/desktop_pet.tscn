@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://phiork3b6imf"]
+
+[ext_resource type="Script" uid="uid://dt4owgbr08wju" path="res://Scene/desktop_pet.gd" id="1_pet"]
+[ext_resource type="Script" uid="uid://cqfkhphdu0r4" path="res://Scene/behaviors/arrive.gd" id="2_arrive"]
+[ext_resource type="SpriteFrames" uid="uid://g8bxjvsa3s7w" path="res://Asset/Alain/arrive/arrive.tres" id="3_arrive"]
+[ext_resource type="Script" uid="uid://be7ll2tncim2h" path="res://Scene/behaviors/idle.gd" id="4_idle"]
+[ext_resource type="SpriteFrames" uid="uid://cc16n8ypgjy1m" path="res://Asset/Alain/idle/idle.tres" id="5_idle"]
+[ext_resource type="Script" uid="uid://jw5jo6sie638" path="res://Scene/behaviors/random.gd" id="6_random"]
+[ext_resource type="SpriteFrames" uid="uid://dyuhmg5ojek3x" path="res://Asset/Alain/random/random.tres" id="7_random"]
+[ext_resource type="Script" uid="uid://c4uehtjm4daf8" path="res://Scene/behaviors/poke.gd" id="8_poke"]
+[ext_resource type="SpriteFrames" uid="uid://h4llvk8dyp6x" path="res://Asset/Alain/poke/poke.tres" id="9_poke"]
+[ext_resource type="Script" uid="uid://dmiyh1s61pjuw" path="res://Scene/activity_monitor.gd" id="10_monitor"]
+[ext_resource type="Script" uid="uid://cc5risqcw0xqm" path="res://Scene/behaviors/sleep.gd" id="11_sleep"]
+[ext_resource type="SpriteFrames" uid="uid://c514ybqu7fft5" path="res://Asset/Alain/sleep/sleep.tres" id="12_sleep"]
+[ext_resource type="Script" uid="uid://cw3h8fkvom4u2" path="res://Scene/behaviors/typing.gd" id="13_typing"]
+[ext_resource type="SpriteFrames" uid="uid://dsxyhbb6y0y0r" path="res://Asset/Alain/typing/typing.tres" id="14_typing"]
+[ext_resource type="Script" uid="uid://b5bpx247g1jyl" path="res://Scene/behaviors/drawing.gd" id="15_drawing"]
+[ext_resource type="SpriteFrames" uid="uid://707001dp1y3h" path="res://Asset/Alain/drawing/drawing.tres" id="16_drawing"]
+[ext_resource type="Script" uid="uid://dfjwsiqf3ywki" path="res://Scene/behaviors/music.gd" id="17_music"]
+[ext_resource type="SpriteFrames" uid="uid://bumljgjxabxi0" path="res://Asset/Alain/music/music.tres" id="18_music"]
+[ext_resource type="Script" uid="uid://b0onemdu51uww" path="res://Scene/behaviors/game.gd" id="19_game"]
+[ext_resource type="SpriteFrames" uid="uid://c7ll15d6qyvaq" path="res://Asset/Alain/game/game.tres" id="20_game"]
+[ext_resource type="Script" uid="uid://l0aecl2glula" path="res://Scene/behaviors/screenshot.gd" id="21_screenshot"]
+[ext_resource type="SpriteFrames" uid="uid://dmqxmljtbifaw" path="res://Asset/Alain/screenshot/screenshot.tres" id="22_screenshot"]
+[ext_resource type="Script" uid="uid://cubkroxu2ntqd" path="res://Scene/behaviors/battery.gd" id="23_battery"]
+[ext_resource type="SpriteFrames" uid="uid://bm7s1d46rufgw" path="res://Asset/Alain/battery/battery.tres" id="24_battery"]
+
+[node name="DesktopPet" type="Control" unique_id=1928905255]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pet")
+
+[node name="ActivityMonitor" type="Node" parent="." unique_id=805234357]
+script = ExtResource("10_monitor")
+
+[node name="Arrive" type="AnimatedSprite2D" parent="." unique_id=2015514825]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("3_arrive")
+animation = &"arrive"
+frame = 51
+frame_progress = 1.0
+script = ExtResource("2_arrive")
+priority = 50
+
+[node name="Idle" type="AnimatedSprite2D" parent="." unique_id=37898858]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("5_idle")
+animation = &"pumpkin"
+frame_progress = 0.0033724564
+script = ExtResource("4_idle")
+switch_time = 60.0
+
+[node name="Sleep" type="AnimatedSprite2D" parent="." unique_id=1152286808 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("12_sleep")
+animation = &"loading_sleep"
+script = ExtResource("11_sleep")
+monitor = NodePath("../ActivityMonitor")
+priority = 20
+
+[node name="Random" type="AnimatedSprite2D" parent="." unique_id=860346359 node_paths=PackedStringArray("idle")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("7_random")
+animation = &"angry"
+frame_progress = 0.6315678
+script = ExtResource("6_random")
+idle = NodePath("../Idle")
+interval_min = 50.0
+interval_max = 150.0
+loops_max = 3
+priority = 10
+
+[node name="Typing" type="AnimatedSprite2D" parent="." unique_id=1928761745 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("14_typing")
+animation = &"typing"
+script = ExtResource("13_typing")
+monitor = NodePath("../ActivityMonitor")
+priority = 30
+
+[node name="Drawing" type="AnimatedSprite2D" parent="." unique_id=1261316120 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("16_drawing")
+animation = &"drawing"
+script = ExtResource("15_drawing")
+monitor = NodePath("../ActivityMonitor")
+priority = 35
+
+[node name="Music" type="AnimatedSprite2D" parent="." unique_id=892991798 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("18_music")
+animation = &"music"
+script = ExtResource("17_music")
+monitor = NodePath("../ActivityMonitor")
+priority = 25
+
+[node name="Game" type="AnimatedSprite2D" parent="." unique_id=1199558521 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("20_game")
+animation = &"game"
+frame = 4
+frame_progress = 0.56177825
+script = ExtResource("19_game")
+monitor = NodePath("../ActivityMonitor")
+exit_after = 3
+priority = 40
+
+[node name="Screenshot" type="AnimatedSprite2D" parent="." unique_id=1459029501 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("22_screenshot")
+animation = &"camera"
+frame = 41
+frame_progress = 1.0
+script = ExtResource("21_screenshot")
+monitor = NodePath("../ActivityMonitor")
+priority = 60
+
+[node name="Battery" type="AnimatedSprite2D" parent="." unique_id=853502372 node_paths=PackedStringArray("monitor")]
+visible = false
+position = Vector2(100, 100)
+sprite_frames = ExtResource("24_battery")
+animation = &"battery_low"
+script = ExtResource("23_battery")
+monitor = NodePath("../ActivityMonitor")
+priority = 45
+
+[node name="Poke" type="AnimatedSprite2D" parent="." unique_id=134371598]
+position = Vector2(100, 100)
+sprite_frames = ExtResource("9_poke")
+animation = &"squish_cheeks"
+frame = 24
+frame_progress = 1.0
+script = ExtResource("8_poke")
+priority = 100

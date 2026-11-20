@@ -1,0 +1,90 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c7ll15d6qyvaq"]
+
+[ext_resource type="Texture2D" uid="uid://dr1go5xo7o1vj" path="res://Asset/Alain/game/game/000.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://u70h1e368o6u" path="res://Asset/Alain/game/game/001.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b24lck32hwyqu" path="res://Asset/Alain/game/game/002.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dbkjwbf8vy4re" path="res://Asset/Alain/game/game/003.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dgjifhkc5l3dl" path="res://Asset/Alain/game/game/004.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cnjnqf5khi6aw" path="res://Asset/Alain/game/game/005.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://lk6hve4fbv1e" path="res://Asset/Alain/game/game/006.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://yx12uxq08ybg" path="res://Asset/Alain/game/game/007.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://c5pwdjmkvkd6o" path="res://Asset/Alain/game/game/008.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://btobskucimd5s" path="res://Asset/Alain/game/game/009.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bichaqknwmcd5" path="res://Asset/Alain/game/game/010.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://b62x6d71k0qtf" path="res://Asset/Alain/game/game/011.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bk0q6scaycrh7" path="res://Asset/Alain/game/game/012.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://co0giq8ukfwc" path="res://Asset/Alain/game/game/013.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://dd32lu7dhrxns" path="res://Asset/Alain/game/game/014.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://bxpa5dujdplsa" path="res://Asset/Alain/game/game/015.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://crx34fh3u1xqv" path="res://Asset/Alain/game/game/016.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://d3piq2w001wxy" path="res://Asset/Alain/game/game/017.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://dtqw6kdon1e7y" path="res://Asset/Alain/game/game/018.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://5xprv4ocbwdm" path="res://Asset/Alain/game/game/019.png" id="20"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20")
+}],
+"loop": 1,
+"name": &"game",
+"speed": 25.0
+}]
