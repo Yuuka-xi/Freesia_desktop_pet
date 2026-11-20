@@ -1,11 +1,13 @@
-extends PetBehavior
+extends MoodBehavior
 ## 打字：最近 window 秒内按键达到 threshold 次就开始打字，
 ## 连续 cooldown 秒没按键才停（防止偶尔按快捷键触发、停下思考时立刻切走）
+## 心情：平均每秒按键 ≥ angry_kps 就生气，放慢 angry_hold 秒后恢复；连续打字太久就疲倦（见 MoodBehavior）
 
 @export var monitor: ActivityMonitor  ## 提供每秒按键数
 @export var window := 5  ## 统计最近几秒的按键
 @export var threshold := 8  ## 这几秒内按了几次键算在打字
 @export var cooldown := 5  ## 连续几秒没按键就停止打字
+@export var angry_kps := 6.0  ## 最近 window 秒平均每秒按键达到多少算“打字太快”（生气）
 
 var _history: Array[int] = []  # 最近 window 秒每秒的按键数
 var _quiet := 0  # 已经连续几秒没按键
@@ -21,7 +23,7 @@ func wants_active() -> bool:
 	return requested or _typing
 
 
-# 每秒收到一次按键数，更新是否在打字
+# 每秒收到一次按键数，更新是否在打字和心情
 func _on_monitor_updated() -> void:
 	_history.append(monitor.keys)
 	if _history.size() > window:
@@ -35,3 +37,6 @@ func _on_monitor_updated() -> void:
 		_typing = true
 	elif _typing and _quiet >= cooldown:
 		_typing = false
+
+	# 只有这一秒还在飞快打字、且最近平均也够快，才算（继续）生气；放慢后保持 angry_hold 秒就恢复
+	tick_mood(_typing, _typing and monitor.keys >= angry_kps and total >= angry_kps * window)

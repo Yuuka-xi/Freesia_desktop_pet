@@ -2,8 +2,10 @@ extends PetBehavior
 ## 正常待机：优先级最低，没有别的分类想上场时就是它
 ## 每隔 switch_time 秒换一个待机动作（等当前这遍播完再换）
 ## 被其他分类打断后回来，接着播原来的动作，计时也接着算
+## 打开桌宠后第一个待机动作固定为 first_anim，之后再随机换
 
 @export var switch_time := 10.0  ## 多少秒换一个待机动作，0 表示不换
+@export var first_anim := &"idle_pngtuber"  ## 第一个待机动作；留空或不存在时随机抽
 
 var _elapsed := 0.0  # 当前待机动作已经播了多久（被打断期间不计时）
 var _started := false  # 是否已经抽过第一个待机动作
@@ -23,14 +25,17 @@ func wants_active() -> bool:
 	return true
 
 
-# 第一次上场随机抽一个；之后回来都接着播原来那个
+# 第一次上场播 first_anim；之后回来都接着播原来那个
 func enter() -> void:
 	visible = true
 	if _started:
 		play(animation)
 	else:
 		_started = true
-		play_random()
+		if sprite_frames.has_animation(first_anim):
+			play(first_anim)
+		else:
+			play_random()
 
 
 # 每播完一遍检查一次，时间到了就换一个不一样的待机动作

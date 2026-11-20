@@ -3,13 +3,15 @@
 # 字段：
 #   idle = 距离上次键盘/鼠标操作的秒数
 #   keys = 过去约 1 秒按下了几次键（只计数，不记录按了哪个键）
+#   undos = 过去约 1 秒按了几次 Ctrl+Z（唯一单独识别的组合键，用于判断画画时“疯狂撤销”）
 #   app  = 前台程序的进程名（小写、不带 .exe；只读进程名，不读窗口标题）
 #   sound = 正在出声的程序进程名列表（只看音量电平，不录音、不读歌名）
 #   path = 前台程序 exe 的完整路径（小写）
 #   fullscreen = 是否处于 D3D 独占全屏（基本只有游戏会这样）
 #   shots = 距上一行，剪贴板里出现了几次新图片（截屏）；只看有没有图片，不读图片内容
 #   battery = 电量百分比（没有电池的台式机为 -1）
-#   charging = 是否插着电源param([int]$ParentPid = 0)
+#   charging = 是否插着电源
+param([int]$ParentPid = 0)
 
 Add-Type @"
 using System;
@@ -219,7 +221,12 @@ public static class PetKeys {
             int vk = Marshal.ReadInt32(lParam) & 0xFF;
             int msg = (int)wParam;
             if (msg == 0x100 || msg == 0x104) {        // 按下
-                if (!down[vk]) { down[vk] = true; Interlocked.Increment(ref count); }
+                if (!down[vk]) {
+                    down[vk] = true;
+                    Interlocked.Increment(ref count);
+                    // Ctrl+Z：Z 键按下时左或右 Ctrl 正按着
+                    if (vk == 0x5A && (down[0xA2] || down[0xA3] || down[0x11])) Interlocked.Increment(ref undos);
+                }
             } else if (msg == 0x101 || msg == 0x105) { // 松开
                 down[vk] = false;
             }
@@ -227,8 +234,11 @@ public static class PetKeys {
         return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
     }
 
+    static int undos;
+
     // 取出计数并清零
     public static int Take() { return Interlocked.Exchange(ref count, 0); }
+    public static int TakeUndos() { return Interlocked.Exchange(ref undos, 0); }
 }
 "@
 
@@ -246,7 +256,7 @@ while ($true) {
     $charging = if ([PetPower]::Charging()) { 'true' } else { 'false' }
     $sound = [PetSound]::Playing() -replace '[\\"]', ''
     $soundJson = if ($sound) { '"' + ($sound -replace ',', '","') + '"' } else { '' }
-    [Console]::Out.WriteLine('{"idle":' + $idle + ',"keys":' + $keys + ',"app":"' + $app + '","path":"' + $path +
+    [Console]::Out.WriteLine('{"idle":' + $idle + ',"keys":' + $keys + ',"undos":' + [PetKeys]::TakeUndos() + ',"app":"' + $app + '","path":"' + $path +
         '","fullscreen":' + $full + ',"shots":' + [PetClipboard]::NewImages() +
         ',"battery":' + [PetPower]::Percent() + ',"charging":' + $charging + ',"sound":[' + $soundJson + ']}')
     [Console]::Out.Flush()

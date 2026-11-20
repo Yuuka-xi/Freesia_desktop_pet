@@ -12,8 +12,8 @@ var _pressing := false
 var _dragging := false
 var _press_pos := Vector2i.ZERO
 var _drag_offset := Vector2i.ZERO
-var _shape_cache := {}  # 帧贴图 → 该帧的轮廓（贴图坐标），算过一次就记住
-var _last_texture: Texture2D  # 上次设置穿透区域时用的帧
+var _shape_cache := {}  # 帧贴图路径 → 该帧的轮廓（贴图坐标），算过一次就记住
+var _last_frame := ""  # 上次设置穿透区域时用的帧（贴图路径）
 
 @onready var poke: PetBehavior = $Poke
 
@@ -35,12 +35,14 @@ func _update_mouse_area() -> void:
 	if current == null or current.sprite_frames == null:
 		return
 	var texture := current.sprite_frames.get_frame_texture(current.animation, current.frame)
-	if texture == null or texture == _last_texture:
+	# 按贴图路径记录和缓存，不持有贴图本身，这样分类下场后贴图能被释放
+	if texture == null or texture.resource_path == _last_frame:
 		return
-	_last_texture = texture
-	if not _shape_cache.has(texture):
-		_shape_cache[texture] = _outline(texture)
-	var shape: PackedVector2Array = _shape_cache[texture]
+	var key := texture.resource_path
+	_last_frame = key
+	if not _shape_cache.has(key):
+		_shape_cache[key] = _outline(texture)
+	var shape: PackedVector2Array = _shape_cache[key]
 	if shape.size() < 3:
 		return  # 整帧透明时保留上一帧的区域，避免变成整个窗口都能点
 	# 贴图坐标 → 窗口像素坐标（精灵居中显示，再乘上视口到窗口的缩放）
@@ -68,10 +70,19 @@ func _pick_behavior() -> void:
 	for b in _behaviors:
 		if b.wants_active() and (best == null or b.priority > best.priority):
 			best = b
+	# 后台加载完的资源及时取回；既不在场、也不准备上场的分类释放资源，省内存
+	for b in _behaviors:
+		if b.is_loading():
+			b.frames_ready()
+		if b != current and b != best:
+			b.unload_frames()
 	if best == current:
 		return
+	if best and not best.frames_ready():
+		return  # 新分类还在后台加载，先继续播当前动作，加载好再切换（不卡画面）
 	if current:
 		current.exit()
+		current.unload_frames()
 	current = best
 	if current:
 		current.enter()

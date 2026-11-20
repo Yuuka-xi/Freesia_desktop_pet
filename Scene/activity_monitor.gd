@@ -10,6 +10,7 @@ signal updated  ## 每收到一次新数据（约每秒）发出
 
 var idle_seconds := 0.0  ## 距离用户上次操作键盘/鼠标过了多少秒
 var keys := 0  ## 过去约 1 秒按了几次键
+var undos := 0  ## 过去约 1 秒按了几次 Ctrl+Z
 var app := ""  ## 前台程序进程名（小写、不带 .exe），如 photoshop
 var sound: Array = []  ## 正在出声的程序进程名，如 ["cloudmusic"]
 var path := ""  ## 前台程序 exe 的完整路径（小写）
@@ -58,6 +59,7 @@ func _apply(data: Variant) -> void:
 	if data is Dictionary:
 		idle_seconds = data.get("idle", 0.0)
 		keys = int(data.get("keys", 0))
+		undos = int(data.get("undos", 0))
 		app = data.get("app", "")
 		sound = data.get("sound", [])
 		path = data.get("path", "")

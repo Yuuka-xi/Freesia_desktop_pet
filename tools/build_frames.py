@@ -1,20 +1,29 @@
-"""把 EmoteLab 导出的 GIF 同步进项目，并为每个分类生成一个 SpriteFrames（<分类>/<分类>.tres）。
+r"""把 EmoteLab 导出的 GIF 同步进项目，并为每个分类生成一个 SpriteFrames（<分类>/<分类>.tres）。
 
-用法（在项目根目录）：  python tools/build_frames.py
+用法（在项目根目录）：  python tools/build_frames.py <角色名>     例如  python tools/build_frames.py Rene
+- 读取 EmoteLab\Export\<角色名>，输出到 Asset/<角色名>/
 - 新增或改过的 GIF：重新拆帧（200x200）
 - EmoteLab 里删掉的 GIF：对应序列帧也删掉
-- 子文件夹里的动画会带前缀，如 随机动作/长动作/read → 动画名 long_read
+- 子文件夹里的动画会带前缀，如 打字/生气/typing → 动画名 angry_typing
 """
-import os, re, shutil, subprocess
+import os, re, shutil, subprocess, sys
 
-SRC = r"C:\Users\yuanx\Documents\EmoteLab\Export\Alain"
+if len(sys.argv) != 2:
+    sys.exit("用法：python tools/build_frames.py <角色名>，例如 Rene")
+CHARACTER = sys.argv[1]
+SRC = os.path.join(r"C:\Users\yuanx\Documents\EmoteLab\Export", CHARACTER)
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DST = os.path.join(PROJECT, "Asset", "Alain")
+DST = os.path.join(PROJECT, "Asset", CHARACTER)
 MAGICK = r"C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe"
 SIZE, FPS = "200x200", 25.0
-CAT = {"休眠": "sleep", "截屏": "screenshot", "戳一戳": "poke", "打字": "typing",
-       "正常待机": "idle", "消息通知": "notify", "游戏": "game", "电量": "battery",
-       "画画": "drawing", "随机动作": "random", "长动作": "long", "音乐": "music"}
+# 中文文件夹名 → 英文（同一分类允许多个中文写法）
+CAT = {"休眠": "sleep", "截屏": "screenshot", "截图": "screenshot", "戳一戳": "poke", "打字": "typing",
+       "正常待机": "idle", "待机": "idle", "消息通知": "notify", "游戏": "game", "电量": "battery",
+       "画画": "drawing", "随机动作": "random", "随机": "random", "到达": "arrive",
+       "长动作": "long", "生气": "angry", "疲倦": "tired", "音乐": "music"}
+if not os.path.isdir(SRC):
+    sys.exit("找不到导出文件夹：" + SRC)
+os.makedirs(DST, exist_ok=True)
 ONE_SHOT = {"arrive", "poke", "screenshot", "notify"}  # 这些分类的动画只播一次
 
 
